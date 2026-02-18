@@ -5,7 +5,7 @@
   <a href="/">主页</a>
   <a href="/">文章</a>
   <a href="/">关于</a>
-  <!-- <a href="/"></a> -->
+  <a href="/"></a>
 </li>
 </template>
 
