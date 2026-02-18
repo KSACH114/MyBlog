@@ -16,11 +16,14 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useLenis } from './composables/useLenis'
 import TheStage from './components/TheStage.vue'
 import StickyLogo from './components/StickyLogo.vue'
 import TopBar from './components/TopBar.vue'
 import Hero from './components/Hero.vue'
 import BlogList from './components/BlogList.vue'
+
+useLenis()
 
 const topBarRef = ref(null)
 
@@ -86,18 +89,6 @@ const handleCardClick = (article) => {
 .content {
   position: relative;
   z-index: 10;
-  animation: contentFadeIn 2s ease-in-out;
-}
-
-@keyframes contentFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .spacer {

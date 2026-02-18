@@ -13,6 +13,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  scroll-behavior: auto !important;
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -21,12 +33,11 @@
 body {
   margin: 0;
   padding: 0;
-  background: #242424;
+  background: #000;
+  overflow-x: hidden;
 }
 
 #app {
   margin: 0;
   padding: 0;
 }
-
-

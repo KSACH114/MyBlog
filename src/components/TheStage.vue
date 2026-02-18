@@ -1,13 +1,12 @@
 <template>
-  <div class="scaffold" ref="containerRef" @scroll="onScroll">
+  <div class="stage">
     <slot></slot>
   </div>
 </template>
 
 <script setup>
-import { ref, provide, readonly } from 'vue'
+import { ref, provide, readonly, onMounted, onUnmounted } from 'vue'
 
-const containerRef = ref(null)
 const scrollY = ref(0)
 const progress = ref(0)
 const isStuck = ref(false)
@@ -19,10 +18,7 @@ provide('isStuck', readonly(isStuck))
 const getSyncDistance = () => window.innerHeight
 
 const updateProgress = () => {
-  const container = containerRef.value
-  if (!container) return
-  
-  const scrollTop = container.scrollTop
+  const scrollTop = window.scrollY
   scrollY.value = scrollTop
   
   const syncDistance = getSyncDistance()
@@ -36,6 +32,15 @@ const onScroll = () => {
   requestAnimationFrame(updateProgress)
 }
 
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  updateProgress()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+})
+
 defineExpose({
   scrollY,
   progress,
@@ -44,22 +49,10 @@ defineExpose({
 </script>
 
 <style scoped>
-.scaffold {
+.stage {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
   position: relative;
   background-color: #000;
   color: #fff;
-  scroll-behavior: smooth;
-}
-
-.scaffold::-webkit-scrollbar {
-  display: none;
-}
-.scaffold {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 </style>
