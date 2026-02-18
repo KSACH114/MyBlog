@@ -86,6 +86,18 @@ const handleCardClick = (article) => {
 .content {
   position: relative;
   z-index: 10;
+  animation: contentFadeIn 2s ease-in-out;
+}
+
+@keyframes contentFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .spacer {
