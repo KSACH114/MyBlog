@@ -1,6 +1,6 @@
 <template>
   <main class="content-layer">
-    <div class="spacer-100vh"></div>
+    <div class="spacer-10vh"></div>
 
     <div class="blog-container">
       <section class="intro-text">
@@ -86,8 +86,8 @@ const getCoverStyle = (article) => {
   z-index: 10;
 }
 
-.spacer-100vh {
-  height: 100vh;
+.spacer-10vh {
+  height: 10vh;
   pointer-events: none;
 }
 

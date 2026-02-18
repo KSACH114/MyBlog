@@ -1,11 +1,12 @@
 <template>
-  <div class="hero-layer" :style="heroStyle">
+  <div class="bg-container">
     <img 
       :src="imageSrc" 
       :alt="imageAlt" 
-      class="hero-img"
+      class="bg-img"
+      :style="imgStyle"
     />
-    <div class="hero-overlay" :style="{ opacity: overlayOpacity }"></div>
+    <div class="mask" :style="{ opacity: progress * 0.9 }"></div>
     
     <div class="scroll-hint" :style="{ opacity: scrollHintOpacity }">
       <p>{{ scrollText }}</p>
@@ -35,15 +36,11 @@ const props = defineProps({
 const scrollY = inject('scrollY')
 const progress = inject('progress')
 
-const heroStyle = computed(() => {
+const imgStyle = computed(() => {
   return {
-    transform: `scale(${1 + scrollY.value * 0.0005})`,
-    filter: `blur(${scrollY.value * 0.02}px)`
+    transform: `scale(${1 + progress.value * 0.1}) translateY(${scrollY.value * 0.2}px)`,
+    filter: `blur(${progress.value * 10}px)`
   }
-})
-
-const overlayOpacity = computed(() => {
-  return Math.min(scrollY.value / 600, 0.8)
 })
 
 const scrollHintOpacity = computed(() => {
@@ -52,29 +49,28 @@ const scrollHintOpacity = computed(() => {
 </script>
 
 <style scoped>
-.hero-layer {
-  position: sticky;
-  top: 0;
+.bg-container {
+  position: fixed;
+  z-index: 0;
   width: 100%;
   height: 100vh;
-  z-index: 0;
   overflow: hidden;
 }
 
-.hero-img {
+.bg-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.1s linear;
 }
 
-.hero-overlay {
+.mask {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: radial-gradient(circle, transparent, #000);
   pointer-events: none;
 }
 

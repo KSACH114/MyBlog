@@ -1,65 +1,81 @@
 <template>
-  <header class="top-bar" :class="{ 'is-scrolled': scrollY > 50 }">
-    <div class="logo-placeholder"></div> 
-    
-    <nav class="nav-links">
-      <a href="#" v-for="link in navLinks" :key="link">{{ link }}</a>
-    </nav>
-    <div class="user-action">
-      <button class="icon-btn">🔍</button>
+  <nav class="topbar" :class="{ 'glass': isStuck }">
+    <div class="logo-anchor" ref="anchorRef"></div>
+    <div class="inner-nav">
+      <div class="menu">
+        <a href="#" v-for="link in navLinks" :key="link" class="nav-link">{{ link }}</a>
+      </div>
+      <button class="contact">{{ contactText }}</button>
     </div>
-  </header>
+  </nav>
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { ref, inject, defineExpose } from 'vue'
 
 const props = defineProps({
   navLinks: {
     type: Array,
-    default: () => ['Articles', 'Projects', 'About']
+    default: () => ['Essays', 'Works', 'Notes']
   },
-  scrollThreshold: {
-    type: Number,
-    default: 50
+  contactText: {
+    type: String,
+    default: 'Connect'
   }
 })
+3456
+const isStuck = inject('isStuck')
+const anchorRef = ref(null)
 
-const scrollY = inject('scrollY')
+defineExpose({
+  anchorRef
+})
 </script>
 
 <style scoped>
-.top-bar {
-  position: fixed;
+.topbar {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
+  z-index: 50;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  z-index: 90;
-  transition: background 0.3s ease, border-bottom 0.3s ease;
 }
 
-.top-bar.is-scrolled {
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(20px);
+.glass {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.logo-placeholder {
-  width: 100px;
-  height: 100%;
+.logo-anchor {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 30px;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.nav-links {
+.inner-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 200px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu {
   display: flex;
   gap: 32px;
 }
 
-.nav-links a {
+.nav-link {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   font-size: 14px;
@@ -67,26 +83,23 @@ const scrollY = inject('scrollY')
   transition: color 0.2s;
 }
 
-.nav-links a:hover {
+.nav-link:hover {
   color: #fff;
 }
 
-.user-action {
-  display: flex;
-  align-items: center;
-}
-
-.icon-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-
-.icon-btn:hover {
+.contact {
   background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.contact:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 </style>

@@ -1,12 +1,16 @@
 <template>
   <TheStage>
-    <StickyLogo text="KSACH" />
-    <TopBar />
+    <StickyLogo text="KSACH" :anchor-ref="topBarRef?.anchorRef" />
     <Hero />
-    <BlogList 
-      :articles="articles"
-      @card-click="handleCardClick"
-    />
+    
+    <main class="content">
+      <div class="spacer"></div>
+      <TopBar ref="topBarRef" />
+      <BlogList 
+        :articles="articles"
+        @card-click="handleCardClick"
+      />
+    </main>
   </TheStage>
 </template>
 
@@ -17,6 +21,8 @@ import StickyLogo from './components/StickyLogo.vue'
 import TopBar from './components/TopBar.vue'
 import Hero from './components/Hero.vue'
 import BlogList from './components/BlogList.vue'
+
+const topBarRef = ref(null)
 
 const articles = ref([
   { 
@@ -76,4 +82,14 @@ const handleCardClick = (article) => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+.spacer {
+  height: 100vh;
+  pointer-events: none;
+}
 </style>

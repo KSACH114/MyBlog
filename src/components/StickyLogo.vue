@@ -1,76 +1,103 @@
 <template>
-  <div class="magic-logo" :style="logoStyle">
+  <div class="logo" :style="logoStyle">
     {{ text }}
   </div>
 </template>
 
 <script setup>
-import { inject, computed } from 'vue'
+import { inject, computed, watch, ref } from 'vue'
 
 const props = defineProps({
   text: {
     type: String,
     default: 'KSACH'
   },
-  initialFontSize: {
-    type: String,
-    default: '5rem'
+  initialSize: {
+    type: Number,
+    default: 5
   },
-  finalFontSize: {
-    type: String,
-    default: '1.5rem'
+  finalSize: {
+    type: Number,
+    default: 1.5
   },
-  initialLeft: {
-    type: String,
-    default: '50%'
-  },
-  finalLeft: {
-    type: String,
-    default: '24px'
-  },
-  initialTop: {
-    type: String,
-    default: '50%'
-  },
-  finalTop: {
-    type: String,
-    default: '22px'
+  anchorRef: {
+    type: Object,
+    default: null
   }
 })
 
 const progress = inject('progress')
 
+const DEFAULT_ANCHOR = { left: 30, top: 17 }
+
 const logoStyle = computed(() => {
+  const p = progress.value
+  
+  const startX = window.innerWidth / 2
+  const startY = window.innerHeight / 2
+  
+  let endX = DEFAULT_ANCHOR.left
+  let endY = DEFAULT_ANCHOR.top
+  
+  if (props.anchorRef?.value) {
+    const rect = props.anchorRef.value.getBoundingClientRect()
+    endX = rect.left
+    endY = rect.top + rect.height / 2
+  }
+  
+  const currentX = startX + (endX - startX) * p
+  const currentY = startY + (endY - startY) * p
+  
+  const tx = -50 * (1 - p)
+  const ty = -50 * (1 - p)
+  
+  const currentSize = props.initialSize - (props.initialSize - props.finalSize) * p
+  
+  const isOverHalf = p > 0.8
+  
   return {
-    '--p': progress.value,
-    '--initial-font-size': props.initialFontSize,
-    '--final-font-size': props.finalFontSize,
-    '--font-diff': `calc(${props.initialFontSize} - ${props.finalFontSize})`,
-    '--initial-left': props.initialLeft,
-    '--final-left': props.finalLeft,
-    '--initial-top': props.initialTop,
-    '--final-top': props.finalTop
+    left: `${currentX}px`,
+    top: `${currentY}px`,
+    fontSize: `${currentSize}rem`,
+    transform: `translate(${tx}%, ${ty}%)`,
+    color: isOverHalf ? '#fff' : '#fff',
+    '--glow-position': `${(1 - p) * 100}%`
   }
 })
 </script>
 
 <style scoped>
-.magic-logo {
+.logo {
   position: fixed;
   z-index: 100;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: -0.05em;
-  color: #fff;
-  
-  font-size: calc(var(--initial-font-size) - (var(--font-diff) * var(--p)));
-  
-  left: calc(var(--initial-left) - ((calc(var(--initial-left) - var(--final-left)) * var(--p))));
-  top: calc(var(--initial-top) - ((calc(var(--initial-top) - var(--final-top)) * var(--p))));
-  
-  transform: translate(calc(-50% * (1 - var(--p))), calc(-50% * (1 - var(--p))));
-  
+  background: linear-gradient(
+    120deg,
+    #fff 20%,
+    #60a5fa 40%,
+    #3b82f6 50%,
+    #60a5fa 60%,
+    #fff 80%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
   pointer-events: none;
   white-space: nowrap;
   will-change: top, left, font-size, transform;
+  /* transition: font-size 0.1s linear;                                                                                  */
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 </style>
