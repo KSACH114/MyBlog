@@ -7,8 +7,6 @@
 <script setup>
 import { ref, provide, readonly } from 'vue'
 
-const ANIMATION_DISTANCE = 500
-
 const containerRef = ref(null)
 const scrollY = ref(0)
 const progress = ref(0)
@@ -18,16 +16,24 @@ provide('scrollY', readonly(scrollY))
 provide('progress', readonly(progress))
 provide('isStuck', readonly(isStuck))
 
-const onScroll = (e) => {
-  const y = e.target.scrollTop
-  scrollY.value = y
+const getSyncDistance = () => window.innerHeight
+
+const updateProgress = () => {
+  const container = containerRef.value
+  if (!container) return
   
-  let p = y / ANIMATION_DISTANCE
-  if (p < 0) p = 0
-  if (p > 1) p = 1
-  progress.value = p
+  const scrollTop = container.scrollTop
+  scrollY.value = scrollTop
   
-  isStuck.value = y >= window.innerHeight
+  const syncDistance = getSyncDistance()
+  let p = scrollTop / syncDistance
+  progress.value = Math.min(Math.max(p, 0), 1)
+  
+  isStuck.value = scrollTop >= window.innerHeight
+}
+
+const onScroll = () => {
+  requestAnimationFrame(updateProgress)
 }
 
 defineExpose({
