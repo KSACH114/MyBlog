@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { inject, computed, watch, ref } from 'vue'
+import { inject, computed } from 'vue'
 
 const props = defineProps({
   text: {
@@ -31,7 +31,9 @@ const progress = inject('progress')
 const DEFAULT_ANCHOR = { left: 30, top: 17 }
 
 const logoStyle = computed(() => {
-  const p = progress.value
+  const linearP = progress.value
+  
+  const p = Math.pow(linearP, 3)
   
   const startX = window.innerWidth / 2
   const startY = window.innerHeight / 2
@@ -53,15 +55,14 @@ const logoStyle = computed(() => {
   
   const currentSize = props.initialSize - (props.initialSize - props.finalSize) * p
   
-  const isOverHalf = p > 0.8
+  const blurAmount = linearP * (1 - linearP) * 10
   
   return {
     left: `${currentX}px`,
     top: `${currentY}px`,
     fontSize: `${currentSize}rem`,
     transform: `translate(${tx}%, ${ty}%)`,
-    color: isOverHalf ? '#fff' : '#fff',
-    '--glow-position': `${(1 - p) * 100}%`
+    filter: `blur(${blurAmount}px)`
   }
 })
 </script>
@@ -87,8 +88,8 @@ const logoStyle = computed(() => {
   text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
   pointer-events: none;
   white-space: nowrap;
-  will-change: top, left, font-size, transform;
-  /* transition: font-size 0.1s linear;                                                                                  */
+  will-change: top, left, font-size, transform, filter;
+  /* transition: font-size 0.1s linear; */
   animation: shine 3s linear infinite;
 }
 
