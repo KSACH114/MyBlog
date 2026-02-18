@@ -90,7 +90,8 @@ const logoStyle = computed(() => {
   white-space: nowrap;
   will-change: top, left, font-size, transform, filter;
   /* transition: font-size 0.1s linear; */
-  animation: shine 3s linear infinite;
+  /* 更加干脆利落的写法 */
+animation: shine 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes shine {
